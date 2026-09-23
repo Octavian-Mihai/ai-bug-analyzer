@@ -4,6 +4,9 @@ An AI-assisted developer tool that analyzes application errors in a GitHub repos
 proposes a fix as a unified diff, and generates a regression test — then validates the
 fix itself by running the test in a disposable clone before it's ever handed back to you.
 
+![Sample analyze request and response](docs/screenshots/sample-request.png)
+*Example `/analyze` request and response (abbreviated for illustration).*
+
 ## How it works
 
 1. You give it a GitHub repo URL and a ref (branch, commit SHA, or PR number/URL).
