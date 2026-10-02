@@ -1,13 +1,40 @@
 # AI Bug Investigation Assistant
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for an architecture diagram.
-
 An AI-assisted developer tool that analyzes application errors in a GitHub repository,
 proposes a fix as a unified diff, and generates a regression test — then validates the
 fix itself by running the test in a disposable clone before it's ever handed back to you.
 
 ![Sample analyze request and response](docs/screenshots/sample-request.png)
 *Example `/analyze` request and response (abbreviated for illustration).*
+
+
+## Architecture
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant API as FastAPI (app/main.py)
+    participant O as orchestrator.analyze
+    participant GH as GitHub (github_client)
+    participant E as error_capture / context
+    participant L as LLMClient (Claude)
+    participant S as sandbox (temp clone)
+
+    C->>API: POST /analyze {repo, ref, error?}
+    API->>O: analyze(request)
+    O->>GH: resolve ref (branch / SHA / PR), clone
+    GH-->>O: workspace
+    O->>E: parse traceback or discover failing test
+    E-->>O: error + code context
+    O->>L: traceback + source context
+    L-->>O: diagnosis, diff, regression test
+    O->>S: apply patch in disposable clone, run test
+    S-->>O: validation result
+    O-->>API: AnalyzeResponse
+    API-->>C: diagnosis + patch + test + validated?
+```
+
+More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ## How it works
 
