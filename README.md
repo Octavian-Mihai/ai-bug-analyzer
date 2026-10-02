@@ -1,5 +1,7 @@
 # AI Bug Investigation Assistant
 
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for an architecture diagram.
+
 An AI-assisted developer tool that analyzes application errors in a GitHub repository,
 proposes a fix as a unified diff, and generates a regression test — then validates the
 fix itself by running the test in a disposable clone before it's ever handed back to you.
